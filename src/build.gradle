@@ -1,0 +1,14 @@
+apply plugin 'maven'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '$gradleWrapperVersion'
+}
+
+subProjects {
+    apply plugin 'java'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}

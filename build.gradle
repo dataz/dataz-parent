@@ -1,0 +1,89 @@
+import org.gradle.api.tasks.StopExecutionException
+
+version = '0.1.0'
+
+ext {
+    dataSetProjects = ['dataset','datastore-sql']
+    destinationDir = targetDir.endsWith('/') ? targetDir : targetDir + '/'
+}
+
+task wrapper(type: Wrapper, description:'Install gradle wrapper') {
+  gradleVersion = gradleWrapperVersion
+}
+
+repositories {
+    mavenCentral()
+}
+
+task cloneProjects(description:'Clone all dataSet projects from github') {
+    doLast {
+        def installParentGradleProject = false
+        dataSetProjects.each { project ->
+            def directory = new File(destinationDir + project)
+            if( cloneProject(directory, project) ) {
+                installParentGradleProject = true
+            }
+        }
+
+        if( ! installParentGradleProject ) {
+            logger.quiet("Stop script!!!")
+            throw new StopExecutionException("No new projects")
+        }
+    }
+}
+
+task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project') << {
+    installGradleProject(destinationDir)
+}
+
+task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir) {
+}
+
+def cloneProject(directory, project) {
+    boolean cloned=true
+    if (!directory.exists()) {
+        def result = exec {
+            commandLine("git", "clone", "https://github.com/loddar/${project}.git", directory)
+        }
+        logger.quiet("Cloning '$project' into '$directory' done with $result")
+    } else {
+        logger.quiet("Project directory '$directory' exists! Ignored!")
+        cloned = false
+    }
+    return cloned
+}
+
+def installGradleProject(directory) {
+    logger.quiet "Install parent gradle project in directory '$directory'."
+    // gradle build scripts
+    def buildScripts=fileTree('src')
+    buildScripts.include('*.gradle')
+    copy {
+        from buildScripts
+        into directory
+        expand(gradleWrapperVersion: "$gradleWrapperVersion", projects: generateProjects())
+    }
+    // gradle wrapper files
+    def gradlewFiles=fileTree('.')
+    gradlewFiles.include('gradlew')
+    gradlewFiles.include('gradlew.bat')
+    copy {
+        from gradlewFiles
+        into directory
+    }
+}
+
+
+def callGradleWrapper(directory) {
+    def result = exec {
+        commandLine("$directory/gradlew", "wrapper")
+        logger.quiet("Execute '$directory/gradlew' done with $result")
+    }
+}
+
+def generateProjects() {
+    def newLine = System.getProperty("line.separator")
+    dataSetProjects.inject('') { val, proj ->
+        val + "include ':$proj'$newLine"
+    }
+}

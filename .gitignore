@@ -3,3 +3,13 @@ build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
+
+.gitignore
+
+### JetBrains template
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+*.iml
+
+## File-based project format:
+*.ipr
+*.iws

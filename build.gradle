@@ -1,10 +1,14 @@
-import org.gradle.api.tasks.StopExecutionException
-
 version = '0.1.0'
 
 ext {
-    dataSetProjects = ['dataset','datastore-sql']
+    dataSetProjects = ['dataset','dataset-spring','datastore-sql','datastore-neo4j']
     destinationDir = targetDir.endsWith('/') ? targetDir : targetDir + '/'
+    allProjectDirs = dataSetProjects.inject([]) { result, project ->
+        result.add(new File(destinationDir + project))
+        result
+    }
+
+    logger.debug 'All project directories: ' + allProjectDirs
 }
 
 task wrapper(type: Wrapper, description:'Install gradle wrapper') {
@@ -16,41 +20,44 @@ repositories {
 }
 
 task cloneProjects(description:'Clone all dataSet projects from github') {
+    outputs.dir allProjectDirs
     doLast {
-        def installParentGradleProject = false
         dataSetProjects.each { project ->
-            def directory = new File(destinationDir + project)
-            if( cloneProject(directory, project) ) {
-                installParentGradleProject = true
-            }
-        }
-
-        if( ! installParentGradleProject ) {
-            logger.quiet("Stop script!!!")
-            throw new StopExecutionException("No new projects")
+            cloneProject(new File(destinationDir + project), project)
         }
     }
 }
 
-task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project') << {
-    installGradleProject(destinationDir)
+task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project') {
+    outputs.dir allProjectDirs
+    doLast {
+        installGradleProject(destinationDir)
+    }
 }
 
-task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir) {
+task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir)
+
+task update(description: 'Update projects and gradle parent') {
+    doFirst {
+        dataSetProjects.each { project ->
+            cloneProject(new File(destinationDir + project), project)
+        }
+    }
+    doLast {
+        installGradleProject(destinationDir)
+    }
 }
 
 def cloneProject(directory, project) {
-    boolean cloned=true
+    logger.debug("Clone project $project into $directory")
     if (!directory.exists()) {
         def result = exec {
             commandLine("git", "clone", "https://github.com/loddar/${project}.git", directory)
         }
         logger.quiet("Cloning '$project' into '$directory' done with $result")
     } else {
-        logger.quiet("Project directory '$directory' exists! Ignored!")
-        cloned = false
+        logger.warn("Project directory '$directory' exists! Ignored!")
     }
-    return cloned
 }
 
 def installGradleProject(directory) {
@@ -58,6 +65,7 @@ def installGradleProject(directory) {
     // gradle build scripts
     def buildScripts=fileTree('src')
     buildScripts.include('*.gradle')
+    buildScripts.include('*.properties')
     copy {
         from buildScripts
         into directory
@@ -67,19 +75,13 @@ def installGradleProject(directory) {
     def gradlewFiles=fileTree('.')
     gradlewFiles.include('gradlew')
     gradlewFiles.include('gradlew.bat')
+    gradlewFiles.include('gradle/**')
     copy {
         from gradlewFiles
         into directory
     }
 }
 
-
-def callGradleWrapper(directory) {
-    def result = exec {
-        commandLine("$directory/gradlew", "wrapper")
-        logger.quiet("Execute '$directory/gradlew' done with $result")
-    }
-}
 
 def generateProjects() {
     def newLine = System.getProperty("line.separator")

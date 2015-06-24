@@ -134,13 +134,13 @@ def cloneProject(directory, project) {
 }
 
 def updateProject(directory, project) {
-    logger.debug("Update project $project in $directory")
+    logger.quiet("Update (git pull) project $project in $directory")
     if (directory.exists()) {
         def result = exec {
             workingDir "$directory"
-            commandLine "git", "fetch"
+            commandLine "git", "pull"
         }
-        logger.quiet("Update '$project' done with $result")
+        logger.debug("Update '$project' done with $result")
     }
 }
 

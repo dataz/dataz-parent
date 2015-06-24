@@ -66,8 +66,52 @@ or
     gradlew -PtargetDir=$HOME/my/target/directory update
 
 
-What are the Dependencies?
-==========================
+Switching to an existing branch
+================================
+
+Sometimes it is necessary to switch to a branch. First you muast know which are the existing branches. 
+
+You can resolve them by calling
+
+    gradlew show-branches  
+
+or of course 
+
+	gradlew -PtargetDir=$HOME/my/target/directory show-branches
+     
+
+You will get something like this:
+
+```
+    :show-branches
+    Show branches of project 'dataset':
+    * master
+      remotes/origin/HEAD -> origin/master
+      remotes/origin/Release0.5
+      remotes/origin/master
+    Show branches of project 'datastore-sql':
+    * master
+      remotes/origin/HEAD -> origin/master
+      remotes/origin/Release0.5
+      remotes/origin/master
+    Show branches of project 'datastore-neo4j':
+    * master
+      remotes/origin/HEAD -> origin/master
+      remotes/origin/Release0.5
+      remotes/origin/master
+```
+
+Now you can switch to an __existing__(!) branch like _Release0.5_ by calling
+    
+    gradlew switch-branch -Dbranch=Release0.5
+
+or 
+
+	gradlew -PtargetDir=$HOME/my/target/directory switch-branch -Dbranch=Release0.5
+    
+
+The Dependencies
+================
 
 Java8 and Git must be installed. You can download it from here:
 

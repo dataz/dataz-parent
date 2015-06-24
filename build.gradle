@@ -39,30 +39,81 @@ repositories {
     mavenCentral()
 }
 
-task cloneProjects(description:'Clone all dataSet projects from github') {
-    outputs.dir allProjectDirs
-    doLast {
+
+task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir, group: 'dataSet tasks')
+
+task update(description: 'Update projects and gradle parent', group: 'dataSet tasks') {
+    doFirst {
         dataSetProjects.each { project ->
-            cloneProject(new File(destinationDir + project), project)
+            if( ! cloneProject(new File(destinationDir + project), project) ) {
+                updateProject(new File(destinationDir + project), project)
+            }
         }
     }
-}
-
-task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project') {
-    outputs.dir allProjectDirs
     doLast {
         installGradleProject(destinationDir)
     }
 }
 
-task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir)
-
-task update(description: 'Update projects and gradle parent') {
+task 'show-branches'(description: 'Show branches of dataSet projects', group: 'dataSet tasks') {
     doFirst {
+        dataSetProjects.each { project ->
+            showBranches(new File(destinationDir + project), project)
+        }
+    }
+}
+
+task 'switch-branch'(description: 'Switch the (existing) branch of dataSet projects', group: 'dataSet tasks') {
+    doFirst {
+        def branch = checkBrunchParameter(System.getProperty('branch'))
+        if( branch ) {
+            dataSetProjects.each { project ->
+                switchBranch(new File(destinationDir + project), project, branch)
+            }
+        }
+    }
+}
+
+def checkBrunchParameter(branch) {
+    if (! branch || branch.contains('/')) {
+        printErrorMessage(branch)
+        return false
+    }
+
+    return branch
+}
+
+
+def printErrorMessage(branch) {
+    def message = """\
+Error: Missing or invalid branch ($branch)!
+
+Usage: gradle switch-branch -Dbranch=<my-branch>
+
+    <my-branch>  Your existing branch (Call gradlew show-branches)
+
+        The branch must not contain remotes/origin/.. or origin/..
+
+    So a valid call might be:
+
+        gradle switch-branch -Dbranch=MyBrunch
+"""
+        logger.error(message)
+
+}
+
+
+task cloneProjects(description:'Clone all dataSet projects from github', group: 'internal dataSet task (must not be executed)') {
+    outputs.dir allProjectDirs
+    doLast {
         dataSetProjects.each { project ->
             cloneProject(new File(destinationDir + project), project)
         }
     }
+}
+
+task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project', group: 'internal dataSet task (must not be executed)') {
+    outputs.dir allProjectDirs
     doLast {
         installGradleProject(destinationDir)
     }
@@ -72,13 +123,50 @@ def cloneProject(directory, project) {
     logger.debug("Clone project $project into $directory")
     if (!directory.exists()) {
         def result = exec {
-            commandLine("git", "clone", "https://github.com/loddar/${project}.git", directory)
+            commandLine "git", "clone", "https://github.com/loddar/${project}.git", directory
         }
         logger.quiet("Cloning '$project' into '$directory' done with $result")
+        return true
     } else {
-        logger.warn("Project directory '$directory' exists! Ignored!")
+        logger.warn("Project directory '$directory' exists! Cloning skipped!")
+        return false
     }
 }
+
+def updateProject(directory, project) {
+    logger.debug("Update project $project in $directory")
+    if (directory.exists()) {
+        def result = exec {
+            workingDir "$directory"
+            commandLine "git", "fetch"
+        }
+        logger.quiet("Update '$project' done with $result")
+    }
+}
+
+def showBranches(directory, project) {
+    logger.quiet("Show branches of project '$project':")
+    if (directory.exists()) {
+        def result = exec {
+            workingDir "$directory"
+            commandLine "git", "branch", "-a"
+        }
+        logger.debug("Show branches of project '$project' done with $result")
+    }
+}
+
+def switchBranch(directory, project, branch) {
+    logger.quiet("Switch branch of project '$project' to '$branch'")
+    if (directory.exists()) {
+        def result = exec {
+            workingDir "$directory"
+            commandLine "git", "checkout", "$branch"
+        }
+        logger.debug("Switch branch of project '$project' to '$branch' done with $result")
+    }
+}
+
+
 
 def installGradleProject(directory) {
     logger.quiet "Install parent gradle project in directory '$directory'."

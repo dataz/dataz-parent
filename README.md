@@ -26,7 +26,7 @@ How to Install?
 
 After cloning this repository, you should execute
 
-      gradlew install
+      ./gradlew install
 
 or under Windows
 

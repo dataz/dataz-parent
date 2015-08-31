@@ -37,21 +37,21 @@ the *-PtargetDir* Gradle property. If you don't like to call it all the time, ch
 
 Example:
 
-    gradlew -PtargetDir=$HOME/my/target/directory install
+    ./gradlew -PtargetDir=$HOME/my/target/directory install
 
 That's it. After installation you found all dataSet projects
 
     cd ../dataset-projects (or cd $HOME/my/target/directory)
-    gradlew install
+    ./gradlew install
 
 
 If you like to create IntelliJ IDEA project files, call this:
 
-    gradlew idea
+    ./gradlew idea
 
 or setup Eclipse project files:
 
-    gradlew eclipse
+    ./gradlew eclipse
 
 
 How to update?
@@ -59,11 +59,11 @@ How to update?
 
 Just call
 
-    gradlew update
+    ./gradlew update
 
 or
 
-    gradlew -PtargetDir=$HOME/my/target/directory update
+    ./gradlew -PtargetDir=$HOME/my/target/directory update
 
 
 Switching to an existing branch
@@ -73,11 +73,11 @@ Sometimes it is necessary to switch to a branch. First you muast know which are 
 
 You can resolve them by calling
 
-    gradlew show-branches  
+    ./gradlew show-branches  
 
 or of course 
 
-	gradlew -PtargetDir=$HOME/my/target/directory show-branches
+    ./gradlew -PtargetDir=$HOME/my/target/directory show-branches
      
 
 You will get something like this:
@@ -103,11 +103,11 @@ You will get something like this:
 
 Now you can switch to an __existing__(!) branch like _Release0.5_ by calling
     
-    gradlew switch-branch -Dbranch=Release0.5
+    ./gradlew switch-branch -Dbranch=Release0.5
 
 or 
 
-	gradlew -PtargetDir=$HOME/my/target/directory switch-branch -Dbranch=Release0.5
+    ./gradlew -PtargetDir=$HOME/my/target/directory switch-branch -Dbranch=Release0.5
     
 
 The Dependencies

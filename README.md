@@ -124,11 +124,11 @@ Build, install, etc the projects.
     
 __Remarks__
  
-    * If you wan't to work on a branch, do not forget to switch (see _Switching to an existing branch_).   
-    * If you like to create the jar files, then call _./gradlew build_.
-    * If you like to install the jar files within your local maven repository, then call _./gradlew install_.
-    * If you like to create idea project files, then call _./gradlew idea_.
-    * If you like to create eclipse project files, then call _./gradlew eclipse_.
+- If you wan't to work on a branch, do not forget to switch (see _Switching to an existing branch_).   
+- If you like to create the jar files, then call _./gradlew build_.
+- If you like to install the jar files within your local maven repository, then call _./gradlew install_.
+- If you like to create idea project files, then call _./gradlew idea_.
+- If you like to create eclipse project files, then call _./gradlew eclipse_.
 
 The Dependencies
 ================

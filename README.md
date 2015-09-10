@@ -1,8 +1,7 @@
 dataSet Installer
 ===============
 
-Installs all DataSet/DataStore Projects. The only purpose is to install all dataSet projects. After you have done it, you can remove this project from your
-computer.
+Installs, updates and switch branches of all DataSet/DataStore Projects. And it also generates a parent (gradle) project for all cloned projects (on a specified path).
 
 
 Three Simple Steps
@@ -32,7 +31,7 @@ or under Windows
 
       gradlew.bat install
 
-This will create (clone) all dataSet projects into a directory (default is ../dataset-projects). If you like to change the target directory, you can use
+This will create (clone) all dataSet projects into a directory (default is __../dataset-projects__). If you like to change the target directory, you can use
 the *-PtargetDir* Gradle property. If you don't like to call it all the time, change the property in _gradle.properties_.
 
 Example:
@@ -109,6 +108,23 @@ or
 
     ./gradlew -PtargetDir=$HOME/my/target/directory switch-branch -Dbranch=Release0.5
     
+Using Dataset Projects
+======================
+
+First go to the parent project.
+
+    cd ../dataset-projects
+    
+or
+
+    cd $HOME/my/target/directory
+    
+Build or install the projects.
+ 
+    ./gradlew install
+    
+    
+__Caution__: If you wan't to work on a branch, do not forget to switch (see _Switching to an existing branch_).   
 
 The Dependencies
 ================

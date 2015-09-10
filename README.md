@@ -40,20 +40,16 @@ Example:
 
     ./gradlew -PtargetDir=$HOME/my/target/directory install
 
-That's it. After installation you found all dataSet projects
+That's it. After installation you found all dataSet projects in the default directory
 
-    cd ../dataset-projects (or cd $HOME/my/target/directory)
-    ./gradlew install
+    ../dataset-projects
+    
+or if you've used _$HOME/my/target/directory_ 
+    
+   $HOME/my/target/directory 
 
 
-If you like to create IntelliJ IDEA project files, call this:
-
-    ./gradlew idea
-
-or setup Eclipse project files:
-
-    ./gradlew eclipse
-
+__CAUTION__: The dataSet projects (actually their JARs) have __not__ been build or installed, yet. (See _Using dataSet Projects_).
 
 How to update?
 ==============
@@ -121,7 +117,7 @@ or
 
     cd $HOME/my/target/directory
     
-Build or install the projects.
+Build, install, etc the projects.
  
     ./gradlew install
     
@@ -131,6 +127,8 @@ __Remarks__
     * If you wan't to work on a branch, do not forget to switch (see _Switching to an existing branch_).   
     * If you like to create the jar files, then call _./gradlew build_.
     * If you like to install the jar files within your local maven repository, then call _./gradlew install_.
+    * If you like to create idea project files, then call _./gradlew idea_.
+    * If you like to create eclipse project files, then call _./gradlew eclipse_.
 
 The Dependencies
 ================

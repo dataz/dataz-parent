@@ -3,13 +3,15 @@ dataSet Installer
 
 Installs, updates and switch branches of all DataSet/DataStore Projects. And it also generates a parent (gradle) project for all cloned projects (on a specified path).
 
+__CAUTION__: The dataSet installer DOES NOT build or create the JAR files (_see Using dataSet Projects_). It only clones the projects and create the gradle parent project.
+
 
 Three Simple Steps
 ==================
 
 1. Clone this repository (or download is as ZIP) from Github.
 2. Start installing the actually dataSet projects.
-3. Use the installed projects.
+3. Use the projects (build, install, modify, ...).
 
 
 How to clone this Repository?
@@ -108,7 +110,7 @@ or
 
     ./gradlew -PtargetDir=$HOME/my/target/directory switch-branch -Dbranch=Release0.5
     
-Using Dataset Projects
+Using dataSet Projects
 ======================
 
 First go to the parent project.
@@ -124,7 +126,11 @@ Build or install the projects.
     ./gradlew install
     
     
-__Caution__: If you wan't to work on a branch, do not forget to switch (see _Switching to an existing branch_).   
+__Remarks__
+ 
+    * If you wan't to work on a branch, do not forget to switch (see _Switching to an existing branch_).   
+    * If you like to create the jar files, then call _./gradlew build_.
+    * If you like to install the jar files within your local maven repository, then call _./gradlew install_.
 
 The Dependencies
 ================

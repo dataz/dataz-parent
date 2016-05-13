@@ -10,7 +10,7 @@ Three Simple Steps
 ==================
 
 1. Clone this repository (or download is as ZIP) from Github.
-2. Start installing the actually dataSet projects.
+2. Start installing the actually dataZ projects.
 3. Use the projects (build, install, modify, ...).
 
 
@@ -33,14 +33,14 @@ or under Windows
 
       gradlew.bat install
 
-This will create (clone) all dataSet projects into a directory (default is __../dataz-projects__). If you like to change the target directory, you can use
+This will create (clone) all dataZ projects into a directory (default is __../dataz-projects__). If you like to change the target directory, you can use
 the *-PtargetDir* Gradle property. If you don't like to call it all the time, change the property in _gradle.properties_.
 
 Example:
 
     ./gradlew -PtargetDir=$HOME/my/target/directory install
 
-That's it. After installation you found all dataSet projects in the default directory
+That's it. After installation you found all dataZ projects in the default directory
 
     ../dataz-projects
     
@@ -49,7 +49,7 @@ or if you've used _$HOME/my/target/directory_
    $HOME/my/target/directory 
 
 
-__CAUTION__: The dataSet projects (actually their JARs) have __not__ been build or installed, yet. (See _Using dataZ Projects_).
+__CAUTION__: The dataZ projects (actually their JARs) have __not__ been build or installed, yet. (See _Using dataZ Projects_).
 
 How to update?
 ==============
@@ -143,7 +143,7 @@ Gradle is optional, because you can use the Gradle Wrapper (gradlew). But if you
 Issues
 ======
 
-If you want to report any issue or feature request (specific to the dataSet Installer), please do it [here](https://github.com/loddar/dataz-install/issues).
+If you want to report any issue or feature request (specific to the dataZ Installer), please do it [here](https://github.com/loddar/dataz-install/issues).
 
 
 Social
@@ -152,6 +152,7 @@ Social
 You can found me on
 
 [Twitter](https://twitter.com/failearly)
+
 [LinkedIn](https://www.linkedin.com/in/markoumek)
 
 

@@ -1,9 +1,9 @@
-dataSet Installer
+dataZ Installer
 ===============
 
-Installs, updates and switch branches of all DataSet/DataStore Projects. And it also generates a parent (gradle) project for all cloned projects (on a specified path).
+Installs, updates and switch branches of all dataZ/DataStore Projects. And it also generates a parent (gradle) project for all cloned projects (on a specified path).
 
-__CAUTION__: The dataSet installer DOES NOT build or create the JAR files (_see Using dataSet Projects_). It only clones the projects and create the gradle parent project.
+__CAUTION__: The dataZ installer DOES NOT build or create the JAR files (_see Using dataZ Projects_). It only clones the dataZ related projects and create the gradle parent project.
 
 
 Three Simple Steps
@@ -19,7 +19,7 @@ How to clone this Repository?
 
 Just call
 
-    git clone https://github.com/loddar/dataset-install.git
+    git clone https://github.com/loddar/dataz-install.git
 
 
 How to Install?
@@ -33,7 +33,7 @@ or under Windows
 
       gradlew.bat install
 
-This will create (clone) all dataSet projects into a directory (default is __../dataset-projects__). If you like to change the target directory, you can use
+This will create (clone) all dataSet projects into a directory (default is __../dataz-projects__). If you like to change the target directory, you can use
 the *-PtargetDir* Gradle property. If you don't like to call it all the time, change the property in _gradle.properties_.
 
 Example:
@@ -42,14 +42,14 @@ Example:
 
 That's it. After installation you found all dataSet projects in the default directory
 
-    ../dataset-projects
+    ../dataz-projects
     
 or if you've used _$HOME/my/target/directory_ 
     
    $HOME/my/target/directory 
 
 
-__CAUTION__: The dataSet projects (actually their JARs) have __not__ been build or installed, yet. (See _Using dataSet Projects_).
+__CAUTION__: The dataSet projects (actually their JARs) have __not__ been build or installed, yet. (See _Using dataZ Projects_).
 
 How to update?
 ==============
@@ -106,12 +106,12 @@ or
 
     ./gradlew -PtargetDir=$HOME/my/target/directory switch-branch -Dbranch=Release0.5
     
-Using dataSet Projects
+Using dataZ Projects
 ======================
 
 First go to the parent project.
 
-    cd ../dataset-projects
+    cd ../dataz-projects
     
 or
 
@@ -143,7 +143,7 @@ Gradle is optional, because you can use the Gradle Wrapper (gradlew). But if you
 Issues
 ======
 
-If you want to report any issue or feature request (specific to the dataSet Installer), please do it [here](https://github.com/loddar/dataset-install/issues).
+If you want to report any issue or feature request (specific to the dataSet Installer), please do it [here](https://github.com/loddar/dataz-install/issues).
 
 
 Social

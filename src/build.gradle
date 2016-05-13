@@ -29,16 +29,18 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'groovy'
     apply plugin: 'maven'
 
     repositories {
-        mavenCentral()
         mavenLocal()
+        mavenCentral()
+        jcenter()
     }
 
-    // dataSetVersion see gradle.properties
-    version = dataSetVersion
-    group = 'org.failearly.dataset'
+    // dataZVersion see gradle.properties
+    version = dataZVersion
+    group = 'org.failearly.dataz'
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
 
@@ -48,14 +50,24 @@ subprojects {
         testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion
         testCompile group: 'org.hamcrest', name:'hamcrest-library', version: hamcrestVersion
         testCompile group: 'org.mockito', name:'mockito-core', version: mockitoVersion
+        testCompile group: 'org.assertj', name:'assertj-core', version: assertjVersion
+
+        testCompile group: "org.spockframework", name:"spock-core", version: spockVersion
+        testCompile group: "org.codehaus.groovy", name:"groovy-all", version:groovyVersion
+
+        testCompile( 'com.athaydes:spock-reports:1.2.10' ) {
+            transitive = false // this avoids affecting your version of Groovy/Spock
+        }
+
+        // Mocking
+        // allows mocking of classes (in addition to interfaces)
+        testRuntime group: "cglib", name: "cglib-nodep", version: cglibVersion
+
+        // allows mocking of classes without default constructor (together with CGLIB)
+        testRuntime group: "org.objenesis", name: "objenesis", version: objenesisVersion
     }
 
-    test {
-        scanForTestClasses = false;
-        include 'org/failearly/dataset/**/*Test.class'
-    }
-
-    javadoc {
+    javadoc.configure {
         failOnError = false
 
         exclude '**/internal/**'
@@ -68,7 +80,7 @@ subprojects {
             linkSource = true
             // TODO : Update stylesheet
             // stylesheetFile = "\${rootDir}/doc/css/stylesheet.css" as File
-            footer = 'Copyright (C) 2014 <a href="http://fail-early.com">Fail Early</a>. All rights reserved.'
+            footer = 'Copyright (C) 2014-2016 <a href="http://fail-early.com">Fail Early</a>. All rights reserved.'
         }
     }
 
@@ -82,7 +94,7 @@ subprojects {
         from javadoc.destinationDir
     }
 
-    jar {
+    jar.configure {
         dependsOn test
     }
 

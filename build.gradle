@@ -21,9 +21,9 @@ apply plugin: 'idea'
 version = '0.5.0'
 
 ext {
-    dataSetProjects = dataSetProjects.split(/,/)
+    dataZProjects = dataZProjects.split(/,/)
     destinationDir = targetDir.endsWith('/') ? targetDir : targetDir + '/'
-    allProjectDirs = dataSetProjects.inject([]) { result, project ->
+    allProjectDirs = dataZProjects.inject([]) { result, project ->
         result.add(new File(destinationDir + project))
         result
     }
@@ -40,11 +40,11 @@ repositories {
 }
 
 
-task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir, group: 'dataSet tasks')
+task install(dependsOn: 'installParentGradle', description:'Install dataset projects in ' + destinationDir, group: 'dataZ tasks')
 
-task update(description: 'Update projects and gradle parent', group: 'dataSet tasks') {
+task update(description: 'Update projects and gradle parent', group: 'dataZ tasks') {
     doFirst {
-        dataSetProjects.each { project ->
+        dataZProjects.each { project ->
             if( ! cloneProject(new File(destinationDir + project), project) ) {
                 updateProject(new File(destinationDir + project), project)
             }
@@ -55,19 +55,19 @@ task update(description: 'Update projects and gradle parent', group: 'dataSet ta
     }
 }
 
-task 'show-branches'(description: 'Show branches of dataSet projects', group: 'dataSet tasks') {
+task 'show-branches'(description: 'Show branches of dataZ projects', group: 'dataZ tasks') {
     doFirst {
-        dataSetProjects.each { project ->
+        dataZProjects.each { project ->
             showBranches(new File(destinationDir + project), project)
         }
     }
 }
 
-task 'switch-branch'(description: 'Switch the (existing) branch of dataSet projects', group: 'dataSet tasks') {
+task 'switch-branch'(description: 'Switch the (existing) branch of dataZ projects', group: 'dataZ tasks') {
     doFirst {
         def branch = checkBrunchParameter(System.getProperty('branch'))
         if( branch ) {
-            dataSetProjects.each { project ->
+            dataZProjects.each { project ->
                 switchBranch(new File(destinationDir + project), project, branch)
             }
         }
@@ -103,16 +103,16 @@ Usage: gradle switch-branch -Dbranch=<my-branch>
 }
 
 
-task cloneProjects(description:'Clone all dataSet projects from github', group: 'internal dataSet task (must not be executed)') {
+task cloneProjects(description:'Clone all dataZ projects from github', group: 'internal dataZ task (must not be executed)') {
     outputs.dir allProjectDirs
     doLast {
-        dataSetProjects.each { project ->
+        dataZProjects.each { project ->
             cloneProject(new File(destinationDir + project), project)
         }
     }
 }
 
-task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project', group: 'internal dataSet task (must not be executed)') {
+task installParentGradle(dependsOn:'cloneProjects', description:'Create parent project', group: 'internal dataZ task (must not be executed)') {
     outputs.dir allProjectDirs
     doLast {
         installGradleProject(destinationDir)
@@ -177,7 +177,7 @@ def installGradleProject(directory) {
     copy {
         from buildScripts
         into directory
-        expand(gradleWrapperVersion: "$gradleWrapperVersion", projects: generateProjects(), version : "$dataSetVersion")
+        expand(gradleWrapperVersion: "$gradleWrapperVersion", projects: generateProjects(), version : "$dataZVersion")
     }
     // gradle wrapper files
     def gradlewFiles=fileTree('.')
@@ -193,7 +193,7 @@ def installGradleProject(directory) {
 
 def generateProjects() {
     def newLine = System.getProperty("line.separator")
-    dataSetProjects.inject('') { val, proj ->
+    dataZProjects.inject('') { val, proj ->
         val + "include ':$proj'$newLine"
     }
 }
